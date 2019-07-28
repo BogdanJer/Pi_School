@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">PI_week_1</string>
+    <string name="choose_but">ВИБРАТИ</string>
+    <string name="share_but">ПОДІЛИТЬСЯ</string>
+    <string name="question">Яке твоє бажання, мій господар?</string>
+
+    <string name="chooser_title">Відправити текст</string>
+
+    <string name="text_1">Я люблю програмувати!</string>
+    <string name="text_2">Я пишу на Java</string>
+    <string name="text_3">Текст для обміну</string>
+    <string name="text_4">Я буду писати застосунки для Андроіду у Postindustria!</string>
+    <string name="text_5">Незабаром я буду використовути Kotlin!</string>
+
+</resources>

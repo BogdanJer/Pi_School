@@ -1,0 +1,14 @@
+<resources>
+    <string name="app_name">PI_week_1</string>
+    <string name="choose_but">CHOOSE</string>
+    <string name="share_but">SHARE</string>
+    <string name="question">What is thy bidding, my master?</string>
+
+    <string name="chooser_title">Send text</string>
+
+    <string name="text_1">I like programming!</string>
+    <string name="text_2">I write on Java</string>
+    <string name="text_3">Text for sharing</string>
+    <string name="text_4">I will write applications for Android in Postindustria!</string>
+    <string name="text_5">I will use Kotlin soon!</string>
+</resources>
