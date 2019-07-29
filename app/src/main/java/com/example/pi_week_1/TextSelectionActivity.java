@@ -15,25 +15,9 @@ public class TextSelectionActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.text_selection);
     }
-    @Override
-    protected void onStop(){
-        super.onStop();
 
-    }
-    public void firstAnswerIsChosen(View view){
-        returnResult(((TextView)findViewById(R.id.text_to_choose1)).getText().toString());
-    }
-    public void secondAnswerIsChosen(View view){
-        returnResult(((TextView)findViewById(R.id.text_to_choose2)).getText().toString());
-    }
-    public void thirdAnswerIsChosen(View view){
-        returnResult(((TextView)findViewById(R.id.text_to_choose3)).getText().toString());
-    }
-    public void fourthAnswerIsChosen(View view){
-        returnResult(((TextView)findViewById(R.id.text_to_choose4)).getText().toString());
-    }
-    public void fifthAnswerIsChosen(View view){
-        returnResult(((TextView)findViewById(R.id.text_to_choose5)).getText().toString());
+    public void onAnswerChosen(View view) {
+        returnResult(((TextView) view).getText().toString());
     }
     public void returnResult(String text){
         Intent intent = new Intent();

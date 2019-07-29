@@ -13,7 +13,7 @@
         android:layout_weight="1"
         android:layout_marginTop="@dimen/text_selection_textView_top_margin"
         android:text="@string/text_1"
-        android:onClick="firstAnswerIsChosen"
+        android:onClick="onAnswerChosen"
         android:textAppearance="@style/ChooseText"
         android:gravity="center"/>
 
@@ -24,7 +24,7 @@
         android:layout_weight="1"
         android:layout_marginTop="@dimen/text_selection_textView_top_margin"
         android:text="@string/text_2"
-        android:onClick="secondAnswerIsChosen"
+        android:onClick="onAnswerChosen"
         android:gravity="center"
         android:textAppearance="@style/ChooseText"/>
 
@@ -35,7 +35,7 @@
         android:layout_weight="1"
         android:layout_marginTop="@dimen/text_selection_textView_top_margin"
         android:text="@string/text_3"
-        android:onClick="thirdAnswerIsChosen"
+        android:onClick="onAnswerChosen"
         android:gravity="center"
         android:textAppearance="@style/ChooseText"/>
 
@@ -46,7 +46,7 @@
         android:layout_weight="1"
         android:layout_marginTop="@dimen/text_selection_textView_top_margin"
         android:text="@string/text_4"
-        android:onClick="fourthAnswerIsChosen"
+        android:onClick="onAnswerChosen"
         android:gravity="center"
         android:textAppearance="@style/ChooseText"/>
 
@@ -57,7 +57,7 @@
         android:layout_weight="1"
         android:layout_marginTop="@dimen/text_selection_textView_top_margin"
         android:text="@string/text_5"
-        android:onClick="fifthAnswerIsChosen"
+        android:onClick="onAnswerChosen"
         android:gravity="center"
         android:textAppearance="@style/ChooseText"/>
 

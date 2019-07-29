@@ -10,8 +10,6 @@ import android.widget.TextView;
 
 public class MainActivity extends AppCompatActivity {
     public static final int ANOTHER_ACTIVITY = 8;
-    private int count = 0;
-    private boolean isAnotherActivity = false;
     private TextView incomingText;
     private TextView shareText;
     @Override
@@ -21,51 +19,32 @@ public class MainActivity extends AppCompatActivity {
 
         incomingText = findViewById(R.id.incoming_text);
         shareText = findViewById(R.id.share_text);
-
-        Intent intent = getIntent();
-
-        String text = intent.getStringExtra(Intent.EXTRA_TEXT);
-
-        if(text!=null) {
-            incomingText = findViewById(R.id.incoming_text);
-            incomingText.setText(intent.getStringExtra(Intent.EXTRA_TEXT));
-        }
     }
 
+    @Override
+    protected void onNewIntent(Intent intent) {
+        if (intent != null) {
+
+            String text = intent.getStringExtra(Intent.EXTRA_TEXT);
+
+            if (text != null) {
+                incomingText = findViewById(R.id.incoming_text);
+                incomingText.setText(intent.getStringExtra(Intent.EXTRA_TEXT));
+            }
+        }
+    }
     public void chooseText(View view){
         Intent intent = new Intent(this,TextSelectionActivity.class);
         startActivityForResult(intent,ANOTHER_ACTIVITY);
     }
     @Override
-    protected void onStart(){
-        super.onStart();
-
-        if(!isAnotherActivity) {
-            TextView counter = findViewById(R.id.counter);
-            counter.setText(String.format("%x times", count++));
-        }
-    }
-    @Override
-    protected void onResume(){
-        super.onResume();
-
-
-    }
-    @Override
-    protected void onStop() {
-        super.onStop();
-        isAnotherActivity = false;
-    }
-
-    @Override
     protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
         super.onActivityResult(requestCode,resultCode,data);
-        if(requestCode==ANOTHER_ACTIVITY){
-                isAnotherActivity = true;
-                incomingText = findViewById(R.id.share_text);
-                incomingText.setText(data.getStringExtra(TextSelectionActivity.REPLY_TEXT));
-        }
+
+        if (requestCode == ANOTHER_ACTIVITY)
+            shareText.setText(data.getStringExtra(TextSelectionActivity.REPLY_TEXT));
     }
+
     public void shareText(View view){
         String txt = ((TextView)findViewById(R.id.share_text)).getText().toString();
 
@@ -80,8 +59,6 @@ public class MainActivity extends AppCompatActivity {
     protected void onSaveInstanceState(Bundle outState) {
         super.onSaveInstanceState(outState);
 
-        outState.putInt("Count",count);
-        outState.putBoolean("Another_activity",isAnotherActivity);
         outState.putString("Incoming_text",incomingText.getText().toString());
         outState.putString("Share_text",shareText.getText().toString());
     }
@@ -90,10 +67,7 @@ public class MainActivity extends AppCompatActivity {
     protected void onRestoreInstanceState(Bundle savedInstanceState) {
         super.onRestoreInstanceState(savedInstanceState);
 
-        count = savedInstanceState.getInt("Count");
-        isAnotherActivity = savedInstanceState.getBoolean("Another_activity");
         shareText.setText(savedInstanceState.getString("Share_text"));
         incomingText.setText(savedInstanceState.getString("Incoming_text"));
-
     }
 }
