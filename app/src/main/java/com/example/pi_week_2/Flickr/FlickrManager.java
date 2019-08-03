@@ -1,7 +1,5 @@
 package com.example.pi_week_2.Flickr;
 
-import androidx.annotation.Nullable;
-
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -18,18 +16,23 @@ import java.util.ArrayList;
 public class FlickrManager {
     private static FlickrManager fm;
     private final String FLICKR_SEARCH_PHOTO = "method=flickr.photos.search";
-    private final String API_KEY;
-    private String SECRET;
-    private int PER_PAGE = 4000;
-    private int PAGE = 0;
+    private static final String API_KEY = "ad0fe81ffeee38fab599748d37a3ee50";
+    private static final String SECRET = "16336b5dae0b117d";
+    private static final String URL_START = "https://api.flickr.com/services/rest/?";
+    private static final String API_KEY_QUERY = "&api_key=";
+    private static final String PER_PAGE_QUERY = "&per_page=";
+    private static final String PAGE_QUERY = "&page=";
+    private static final String NO_JSON_CALLBACK_QUERY = "&nojsoncallback=1";
+    private static final String FORMAT_QUERY = "&format=";
+    private static final String TAGS_QUERY = "&tags=";
+    private static final String FORMAT = "json";
+    private int perPage = 4000;
+    private int page = 0;
 
-    public FlickrManager(String api_key) {
-        API_KEY = api_key;
-    }
 
-    public static FlickrManager getInstance(String api_key) {
+    public static FlickrManager getInstance() {
         if (fm == null) {
-            fm = new FlickrManager(api_key);
+            fm = new FlickrManager();
         }
         return fm;
     }
@@ -38,9 +41,8 @@ public class FlickrManager {
         URL url;
         StringBuilder json = new StringBuilder();
         try {
-            url = new URL("https://api.flickr.com/services/rest/?" + FLICKR_SEARCH_PHOTO + "&api_key=" + API_KEY + "&per_page=" + PER_PAGE +
-                    "&page=" + PAGE + "&nojsoncallback=1&format=json&tags=" + tags);
-            System.out.println(url);
+            url = new URL(URL_START + FLICKR_SEARCH_PHOTO + API_KEY_QUERY + API_KEY + PER_PAGE_QUERY + perPage +
+                    PAGE_QUERY + page + NO_JSON_CALLBACK_QUERY + FORMAT_QUERY + FORMAT + TAGS_QUERY + tags);
             HttpURLConnection hul = (HttpURLConnection) url.openConnection();
             hul.setRequestMethod("GET");
             hul.setReadTimeout(5000);
@@ -72,8 +74,7 @@ public class FlickrManager {
             JSONArray arrayPhoto = jsonPhotos.getJSONArray("photo");
             for (int i = 0; i < arrayPhoto.length(); i++) {
                 JSONObject obj = arrayPhoto.getJSONObject(i);
-                System.out.println(obj.toString());
-                list.add(new PhotoFlickr(obj.getString("id"), obj.getString("owner"), obj.getString("secret"), obj.getString("server"), obj.getString("farm"), obj.getString("title"), obj.getInt("ispublic") == 1 ? true : false, obj.getInt("isfriend") == 1 ? true : false, obj.getInt("isfamily") == 1 ? true : false));
+                list.add(new PhotoFlickr(obj.getString("id"), obj.getString("owner"), obj.getString("secret"), obj.getString("server"), obj.getString("farm"), obj.getString("title"), obj.getInt("ispublic") == 1, obj.getInt("isfriend") == 1, obj.getInt("isfamily") == 1));
             }
         } catch (JSONException e) {
             e.printStackTrace();
@@ -90,16 +91,11 @@ public class FlickrManager {
         return links.toString();
     }
 
-    public String getAPI_KEY() {
-        return API_KEY;
+    public void setPerPage(int perPage) {
+        this.perPage = perPage;
     }
 
-    @Nullable
-    public String getSECRET() {
-        return SECRET;
-    }
-
-    public void setSECRET(String SECRET) {
-        this.SECRET = SECRET;
+    public void setPage(int page) {
+        this.page = page;
     }
 }

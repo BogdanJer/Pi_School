@@ -4,6 +4,7 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.text.TextUtils;
 import android.text.method.ScrollingMovementMethod;
+import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.LinearLayout;
@@ -20,6 +21,7 @@ public class MainActivity extends AppCompatActivity {
     private TextView photoLinks;
     private ProgressBar progressBar;
 
+    private FindPhotosAsync fpa;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         setTheme(R.style.AppTheme);
@@ -38,7 +40,7 @@ public class MainActivity extends AppCompatActivity {
 
         searchLayout.setLayoutParams(new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT));
 
-        new FindPhotosAsync(searchText, photoLinks, progressBar).execute();
+        fpa = (FindPhotosAsync) new FindPhotosAsync(searchText, photoLinks, progressBar).execute();
     }
 
     @Override
@@ -50,4 +52,11 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
+    @Override
+    protected void onStop() {
+        super.onStop();
+        Log.i("Lifecycle", "Stop");
+        if (fpa != null)
+            fpa.cancel(true);
+    }
 }
