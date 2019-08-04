@@ -11,12 +11,13 @@ import android.widget.LinearLayout;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.example.pi_week_2.Async.FindPhotosAsync;
 
 public class MainActivity extends AppCompatActivity {
-
+    private static final String RUNNING_TAG = "Downloading";
     private TextView searchText;
     private TextView photoLinks;
     private ProgressBar progressBar;
@@ -58,5 +59,22 @@ public class MainActivity extends AppCompatActivity {
         Log.i("Lifecycle", "Stop");
         if (fpa != null)
             fpa.cancel(true);
+    }
+
+    @Override
+    protected void onSaveInstanceState(@NonNull Bundle outState) {
+        super.onSaveInstanceState(outState);
+
+        if (fpa != null) {
+            outState.putString(RUNNING_TAG, "Is working");
+        }
+    }
+
+    @Override
+    protected void onRestoreInstanceState(Bundle savedInstanceState) {
+        super.onRestoreInstanceState(savedInstanceState);
+
+        if (savedInstanceState.getString(RUNNING_TAG) != null)
+            searchPhotos(searchText);
     }
 }
