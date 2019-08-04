@@ -49,11 +49,14 @@ public class FlickrManager {
             hul.connect();
 
             BufferedReader reader = new BufferedReader(new InputStreamReader(hul.getInputStream()));
+
+
             String line;
 
             while ((line = reader.readLine()) != null)
                 json.append(line);
 
+            hul.disconnect();
         } catch (MalformedURLException e) {
             e.printStackTrace();
         } catch (ProtocolException e) {

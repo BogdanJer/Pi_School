@@ -2,4 +2,6 @@
     <string name="app_name">PI_week_2</string>
 
     <string name="search_edit">Search photos</string>
+
+    <string name="network_unavailable">The network is unavailable! Check your internet connection!</string>
 </resources>
