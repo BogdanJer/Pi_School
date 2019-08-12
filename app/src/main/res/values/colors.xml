@@ -7,4 +7,8 @@
     <color name="transparent">#00000000</color>
 
     <color name="white">#fff</color>
+    <color name="black">#000</color>
+    <color name="yellow">#ee1</color>
+    <color name="pink">#f0f</color>
+
 </resources>

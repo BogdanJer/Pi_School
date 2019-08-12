@@ -3,15 +3,17 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:layout_marginLeft="@dimen/linear_left_margin"
-    android:layout_marginRight="@dimen/linear_right_margin"
     android:background="@color/white"
     android:orientation="vertical"
     tools:context=".MainActivity">
 
+    <include layout="@layout/toolbar" />
+
     <FrameLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
+        android:layout_height="match_parent"
+        android:layout_marginLeft="@dimen/linear_left_margin"
+        android:layout_marginRight="@dimen/linear_right_margin">
 
         <ProgressBar
             android:id="@+id/progress_bar"
@@ -36,7 +38,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
-                    android:text="@string/search_edit" />
+                    android:hint="@string/search_edit" />
 
                 <ImageButton
                     android:layout_width="match_parent"

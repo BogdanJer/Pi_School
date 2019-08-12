@@ -1,4 +1,4 @@
-package com.example.pi_week_2.Async;
+package com.example.pi_week_2.async;
 
 import android.os.AsyncTask;
 import android.text.util.Linkify;
@@ -7,25 +7,22 @@ import android.view.View;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 
-import com.example.pi_week_2.Flickr.FlickrManager;
-
-import java.lang.ref.WeakReference;
-
+import com.example.pi_week_2.flickr.FlickrManager;
 
 public class FindPhotosAsync extends AsyncTask<Void, Void, String> {
     private final String searchWord;
-    private WeakReference<TextView> linksListView;
-    private WeakReference<ProgressBar> pbWeakRef;
+    private TextView linksListView;
+    private ProgressBar pb;
 
     public FindPhotosAsync(TextView searchText, TextView linksListView, ProgressBar progressBar) {
-        this.linksListView = new WeakReference<>(linksListView);
+        this.linksListView = linksListView;
         searchWord = searchText.getText().toString();
-        pbWeakRef = new WeakReference<>(progressBar);
+        pb = progressBar;
     }
 
     @Override
     protected void onPreExecute() {
-        pbWeakRef.get().setVisibility(View.VISIBLE);
+        pb.setVisibility(View.VISIBLE);
     }
 
     @Override
@@ -40,9 +37,9 @@ public class FindPhotosAsync extends AsyncTask<Void, Void, String> {
 
     @Override
     protected void onPostExecute(String links) {
-        pbWeakRef.get().setVisibility(View.GONE);
-        linksListView.get().setText(links);
-        Linkify.addLinks(linksListView.get(), Linkify.WEB_URLS);
+        pb.setVisibility(View.GONE);
+        linksListView.setText(links);
+        Linkify.addLinks(linksListView, Linkify.WEB_URLS);
     }
 
     @Override

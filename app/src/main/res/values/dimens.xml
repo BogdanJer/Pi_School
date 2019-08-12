@@ -1,5 +1,19 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+
+    <!--Margin-->
     <dimen name="linear_left_margin">16dp</dimen>
     <dimen name="linear_right_margin">16dp</dimen>
+    <dimen name="medium_bottom_margin">16dp</dimen>
+    <dimen name="medium_margin">16dp</dimen>
+    <dimen name="large_right_margin">20dp</dimen>
+    <dimen name="large_left_margin">20dp</dimen>
+    <dimen name="small_top_margin">10dp</dimen>
+
+    <!--Text size-->
+    <dimen name="logo_size">36sp</dimen>
+    <dimen name="large_text">30sp</dimen>
+    <dimen name="medium_text">24sp</dimen>
+    <dimen name="small_text">20sp</dimen>
+
 </resources>

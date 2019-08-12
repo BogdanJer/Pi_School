@@ -1,4 +1,4 @@
-package com.example.pi_week_2.Flickr;
+package com.example.pi_week_2.flickr;
 
 import androidx.annotation.NonNull;
 
@@ -28,7 +28,8 @@ public class PhotoFlickr {
     @NonNull
     @Override
     public String toString() {
-        return "id: " + id + "\nowner: " + owner + "\nsecret: " + secret + "\nserver: " + server + "\nfarm: " + farm + "\ntitle: " + title + "\nisPuplic: " + isPublic + "\nisFriend: " + isFriend + "\nisFamily: " + isFamily + "\n\n";
+        return "id: " + id + "\nowner: " + owner + "\nsecret: " + secret + "\nserver: " + server + "\nfarm: " + farm + "\ntitle: " + title
+                + "\nisPuplic: " + isPublic + "\nisFriend: " + isFriend + "\nisFamily: " + isFamily + "\n\n";
     }
 
     public String getId() {
