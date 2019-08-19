@@ -1,19 +1,21 @@
 package com.example.pi_week_2;
 
 import android.os.Bundle;
-import android.text.method.ScrollingMovementMethod;
-import android.text.util.Linkify;
-import android.widget.TextView;
+import android.widget.ProgressBar;
 
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
+import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.pi_week_2.db.flickr.FlickrDAO;
+
+import java.util.List;
 
 import static com.example.pi_week_2.MainActivity.USER_TAG;
 
 public class ShowFavoriteActivity extends AppCompatActivity {
+    private String name;
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         setTheme(R.style.AppTheme);
@@ -23,16 +25,18 @@ public class ShowFavoriteActivity extends AppCompatActivity {
         Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
-        String name = getIntent().getStringExtra(USER_TAG);
+        name = getIntent().getStringExtra(USER_TAG);
 
         getSupportActionBar().setTitle(toolbar.getTitle() + "/" + name);
 
-        TextView favoriteText = findViewById(R.id.show_favorite_text);
-        favoriteText.setMovementMethod(new ScrollingMovementMethod());
-
         FlickrDAO dao = FlickrDAO.getDao(this);
-        favoriteText.setText(dao.getUserFavorite(name));
+        List<Photo> list = dao.getUserFavorite(name);
 
-        Linkify.addLinks(favoriteText, Linkify.WEB_URLS);
+        ProgressBar progressBar = findViewById(R.id.progress_bar_favorites);
+
+        RecyclerView recyclerView = findViewById(R.id.show_favorites_recycler_view);
+
+        PhotoFavoriteRecyclerView pfrv = new PhotoFavoriteRecyclerView(name, recyclerView, progressBar, list);
+        pfrv.build(this);
     }
 }

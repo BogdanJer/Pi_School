@@ -1,14 +1,14 @@
 package com.example.pi_week_2;
 
 import android.os.Bundle;
-import android.widget.TextView;
 
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.pi_week_2.db.flickr.FlickrDAO;
-import com.example.pi_week_2.db.flickr.pojo.HistoryNote;
 
 import java.util.List;
 
@@ -28,18 +28,13 @@ public class HistoryActivity extends AppCompatActivity {
 
         getSupportActionBar().setTitle(toolbar.getTitle() + "/" + userName);
 
-        TextView historyView = findViewById(R.id.history_view);
+        List<String> list = FlickrDAO.getDao(this).getUserHistory(userName);
 
-        FlickrDAO dao = FlickrDAO.getDao(this);
 
-        List<HistoryNote> list = dao.getUserHistory(userName);
+        RecyclerView recyclerView = findViewById(R.id.history_recycler_view);
+        LinearLayoutManager manager = new LinearLayoutManager(this);
 
-        int len = list.size() > 20 ? 20 : list.size();
-
-        StringBuffer text = new StringBuffer();
-        for (int i = list.size() - 1, j = 1; i >= list.size() - len; i--)
-            text.append(j++ + ": " + list.get(i).toString());
-
-        historyView.setText(text.toString());
+        recyclerView.setLayoutManager(manager);
+        recyclerView.setAdapter(new SimpleStringAdapter(list));
     }
 }

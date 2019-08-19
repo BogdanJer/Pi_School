@@ -9,6 +9,8 @@
     <dimen name="large_right_margin">20dp</dimen>
     <dimen name="large_left_margin">20dp</dimen>
     <dimen name="small_top_margin">10dp</dimen>
+    <dimen name="small_margin">8dp</dimen>
+    <dimen name="tiny_margin">4dp</dimen>
 
     <!--Text size-->
     <dimen name="logo_size">36sp</dimen>

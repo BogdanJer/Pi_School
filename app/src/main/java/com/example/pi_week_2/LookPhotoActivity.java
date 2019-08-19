@@ -44,29 +44,20 @@ public class LookPhotoActivity extends AppCompatActivity {
 
         favorite = findViewById(R.id.favorite_but);
 
-        if (dao.userHasPhoto(user, searchWord, url))
+        if (dao.userHasPhoto(user, url))
             favorite.setImageDrawable(getResources().getDrawable(R.drawable.star_full));
     }
 
     public void addToFavorite(View view) {
         ImageButton favorite = findViewById(R.id.favorite_but);
 
-        if (dao.userHasPhoto(user, searchWord, url)) {
-
-            Toast.makeText(this, R.string.delete_isnt_working, Toast.LENGTH_LONG).show();
-
-            /**Doesn't work
+        if (dao.userHasPhoto(user, url)) {
              favorite.setImageDrawable(getResources().getDrawable(R.drawable.star_empty));
-             dao.deletePhoto(user, searchWord, url);*/
+            dao.deletePhoto(user, url);
             return;
         }
 
-        if (!dao.isUserTagExist(user, searchWord)) {
-            dao.insertTag(user, searchWord);
-            dao.insertPhoto(user, searchWord, url);
-        } else {
-            dao.insertPhoto(user, searchWord, url);
-        }
+        dao.insertPhoto(user, searchWord, url);
 
         Toast.makeText(this, R.string.photo_is_added, Toast.LENGTH_LONG).show();
 

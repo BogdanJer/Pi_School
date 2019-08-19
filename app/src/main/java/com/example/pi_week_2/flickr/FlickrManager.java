@@ -14,6 +14,7 @@ import java.net.MalformedURLException;
 import java.net.ProtocolException;
 import java.net.URL;
 import java.util.ArrayList;
+import java.util.List;
 
 public class FlickrManager {
     private static final String FLICKR_SEARCH_PHOTO = "flickr.photos.search";
@@ -38,9 +39,9 @@ public class FlickrManager {
         return fm;
     }
 
-    public String searchPhotos(String tags) {
+    public List<String> searchPhotos(String tags) {
         URL url;
-        StringBuffer json = new StringBuffer();
+        StringBuilder json = new StringBuilder();
 
         try {
             Uri.Builder builder = new Uri.Builder();
@@ -80,10 +81,10 @@ public class FlickrManager {
             e.printStackTrace();
         }
 
-        return makeLinks(getPhotos(json.toString()));
+        return makeLinks(getPhotosLinks(json.toString()));
     }
 
-    private ArrayList<PhotoFlickr> getPhotos(String json) {
+    private ArrayList<PhotoFlickr> getPhotosLinks(String json) {
         ArrayList<PhotoFlickr> list = new ArrayList<>();
 
         try {
@@ -102,15 +103,14 @@ public class FlickrManager {
         return list;
     }
 
-    private String makeLinks(ArrayList<PhotoFlickr> list) {
-        StringBuilder links = new StringBuilder();
+    private List<String> makeLinks(ArrayList<PhotoFlickr> list) {
+        List<String> linksList = new ArrayList<>();
 
         for (PhotoFlickr pf : list)
-            links.append("https://farm" + pf.getFarm() + ".staticflickr.com/" + pf.getServer() + "/" + pf.getId() + "_" + pf.getSecret() + ".png\n\n");
+            linksList.add(String.format("https://farm%s.staticflickr.com/%s/%s_%s.png", pf.getFarm(), pf.getServer(), pf.getId(), pf.getSecret()));
 
-        return links.toString();
+        return linksList;
     }
-
     public void setPerPage(int perPage) {
         this.perPage = perPage;
     }

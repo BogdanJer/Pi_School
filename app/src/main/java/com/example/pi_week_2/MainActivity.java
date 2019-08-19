@@ -6,8 +6,6 @@ import android.content.SharedPreferences;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.os.Bundle;
-import android.text.TextUtils;
-import android.text.method.ScrollingMovementMethod;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -21,6 +19,7 @@ import android.widget.Toast;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
+import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.pi_week_2.async.FindPhotosAsync;
 import com.example.pi_week_2.db.flickr.FlickrDAO;
@@ -36,9 +35,11 @@ public class MainActivity extends AppCompatActivity {
     private TextView photoLinks;
     private ProgressBar progressBar;
     private LinearLayout searchLayout;
+    private RecyclerView recyclerView;
 
     private FindPhotosAsync fpa;
 
+    private PhotoSearchRecyclerView psrv;
     private String name;
 
     @Override
@@ -48,12 +49,10 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
 
         searchText = findViewById(R.id.search_text);
-        photoLinks = findViewById(R.id.photo_links);
+        //photoLinks = findViewById(R.id.photo_links);
         progressBar = findViewById(R.id.progress_bar);
 
         searchLayout = findViewById(R.id.search_layout);
-
-        photoLinks.setMovementMethod(new ScrollingMovementMethod());
 
         Stetho.initializeWithDefaults(this);
 
@@ -65,6 +64,8 @@ public class MainActivity extends AppCompatActivity {
         SharedPreferences preferences = getPreferences(Context.MODE_PRIVATE);
 
         searchText.setText(preferences.getString(SEARCH_TAG, ""));
+
+        recyclerView = findViewById(R.id.photos_recycler_view);
     }
 
     public void searchPhotos(View view) {
@@ -73,24 +74,19 @@ public class MainActivity extends AppCompatActivity {
             return;
         }
 
+        String searchWord = searchText.getText().toString();
+
         searchLayout.setLayoutParams(new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT));
 
-        FlickrDAO dao = FlickrDAO.getDao(this);
-        dao.insertHistoryNote(name, searchText.getText().toString());
+        FlickrDAO.getDao(this).insertHistoryNote(name, searchWord);
 
-        fpa = (FindPhotosAsync) new FindPhotosAsync(searchText, photoLinks, progressBar).execute();
+        psrv = new PhotoSearchRecyclerView(recyclerView, name, searchWord);
 
-    }
-    @Override
-    public void startActivity(Intent intent) {
-        if (TextUtils.equals(intent.getAction(), Intent.ACTION_VIEW)) {
-            Intent pIntent = new Intent(this, LookPhotoActivity.class);
-            pIntent.putExtra(USER_TAG, name);
-            pIntent.putExtra(SEARCH_TAG, searchText.getText().toString());
-            pIntent.putExtra(URL_TAG, intent.getData().toString());
-            super.startActivity(pIntent);
-        }
-        super.startActivity(intent);
+        if (PhotoSearchRecyclerView.isBuild) {
+            PhotoSearchRecyclerView psrv = new PhotoSearchRecyclerView(recyclerView, name, searchWord);
+            psrv.build(this, progressBar);
+        } else
+            PhotoSearchRecyclerView.photoSearchRecyclerView.reBuild(searchWord);
     }
 
     @Override
@@ -114,6 +110,9 @@ public class MainActivity extends AppCompatActivity {
             intent.putExtra(USER_TAG, name);
 
             startActivity(intent);
+        } else if (id == R.id.change_view) {
+            //((ActionMenuItemView)findViewById(id)).setIcon(getResources().getDrawable(R.drawable.change_view));
+            // psrv.reBuild(new LinearLayoutManager(this));
         }
 
         return true;

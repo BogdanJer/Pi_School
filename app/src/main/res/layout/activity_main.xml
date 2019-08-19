@@ -15,11 +15,6 @@
         android:layout_marginLeft="@dimen/linear_left_margin"
         android:layout_marginRight="@dimen/linear_right_margin">
 
-        <ProgressBar
-            android:id="@+id/progress_bar"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:visibility="invisible" />
 
         <LinearLayout
             android:layout_width="match_parent"
@@ -47,13 +42,20 @@
                     android:background="@color/transparent"
                     android:onClick="searchPhotos"
                     android:src="@drawable/search_dark" />
+
             </LinearLayout>
 
-            <TextView
-                android:id="@+id/photo_links"
+            <androidx.recyclerview.widget.RecyclerView
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:scrollbars="vertical" />
+                android:id="@+id/photos_recycler_view" />
         </LinearLayout>
+
+        <ProgressBar
+            android:id="@+id/progress_bar"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:visibility="invisible" />
     </FrameLayout>
 </LinearLayout>
