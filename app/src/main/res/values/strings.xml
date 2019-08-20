@@ -18,4 +18,6 @@
 
     <string name="photo_is_added">Photo is added!</string>
     <string name="photo_is_deleted">is deleted!</string>
+
+    <string name="cancel_deleting">UNDO</string>
 </resources>

@@ -1,10 +1,12 @@
-package com.example.pi_week_2;
+package com.example.pi_week_2.adapter;
 
 import android.view.LayoutInflater;
 import android.view.ViewGroup;
 
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
+
+import com.example.pi_week_2.holder.SimpleStringHolder;
 
 import java.util.List;
 

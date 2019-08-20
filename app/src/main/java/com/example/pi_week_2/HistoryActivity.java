@@ -8,6 +8,7 @@ import androidx.appcompat.widget.Toolbar;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.example.pi_week_2.adapter.SimpleStringAdapter;
 import com.example.pi_week_2.db.flickr.FlickrDAO;
 
 import java.util.List;

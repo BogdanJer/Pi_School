@@ -1,10 +1,12 @@
-package com.example.pi_week_2;
+package com.example.pi_week_2.holder;
 
 import android.view.LayoutInflater;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
 import androidx.recyclerview.widget.RecyclerView;
+
+import com.example.pi_week_2.R;
 
 public class SimpleStringHolder extends RecyclerView.ViewHolder {
     private TextView numberView;

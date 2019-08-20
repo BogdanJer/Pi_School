@@ -27,7 +27,7 @@ public class FlickrManager {
     private static final String TAGS_QUERY = "tags";
     private static final String SCHEME = "https";
     private static final String FORMAT = "json";
-    private static final String DOMEN = "api.flickr.com";
+    private static final String DOMAIN = "api.flickr.com";
     private static final String PATH_1 = "services";
     private static final String PATH_2 = "rest";
     private static final String METHOD_QUERY = "method";
@@ -46,7 +46,7 @@ public class FlickrManager {
         try {
             Uri.Builder builder = new Uri.Builder();
             builder.scheme(SCHEME)
-                    .authority(DOMEN)
+                    .authority(DOMAIN)
                     .appendPath(PATH_1)
                     .appendPath(PATH_2)
                     .appendQueryParameter(METHOD_QUERY, FLICKR_SEARCH_PHOTO)

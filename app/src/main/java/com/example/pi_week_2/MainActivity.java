@@ -18,11 +18,17 @@ import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.view.menu.ActionMenuItemView;
 import androidx.appcompat.widget.Toolbar;
+import androidx.recyclerview.widget.GridLayoutManager;
+import androidx.recyclerview.widget.ItemTouchHelper;
+import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.example.pi_week_2.adapter.PhotoAdapter;
 import com.example.pi_week_2.async.FindPhotosAsync;
 import com.example.pi_week_2.db.flickr.FlickrDAO;
+import com.example.pi_week_2.holder.PhotoHolder;
 import com.facebook.stetho.Stetho;
 
 public class MainActivity extends AppCompatActivity {
@@ -37,10 +43,11 @@ public class MainActivity extends AppCompatActivity {
     private LinearLayout searchLayout;
     private RecyclerView recyclerView;
 
+    public static String name;
+    private PhotoAdapter adapter;
     private FindPhotosAsync fpa;
-
-    private PhotoSearchRecyclerView psrv;
-    private String name;
+    private RecyclerView.LayoutManager manager;
+    private boolean gridView = true;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -66,6 +73,15 @@ public class MainActivity extends AppCompatActivity {
         searchText.setText(preferences.getString(SEARCH_TAG, ""));
 
         recyclerView = findViewById(R.id.photos_recycler_view);
+        adapter = new PhotoAdapter(this);
+        manager = new GridLayoutManager(this, 2);
+
+        recyclerView.setLayoutManager(manager);
+        recyclerView.setAdapter(adapter);
+
+        ItemTouchHelper.Callback callback = new PhotoTouchHelper(0, ItemTouchHelper.LEFT | ItemTouchHelper.RIGHT);
+        ItemTouchHelper itemTouchHelper = new ItemTouchHelper(callback);
+        itemTouchHelper.attachToRecyclerView(recyclerView);
     }
 
     public void searchPhotos(View view) {
@@ -78,15 +94,10 @@ public class MainActivity extends AppCompatActivity {
 
         searchLayout.setLayoutParams(new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT));
 
+        adapter.setTag(searchWord);
+
         FlickrDAO.getDao(this).insertHistoryNote(name, searchWord);
-
-        psrv = new PhotoSearchRecyclerView(recyclerView, name, searchWord);
-
-        if (PhotoSearchRecyclerView.isBuild) {
-            PhotoSearchRecyclerView psrv = new PhotoSearchRecyclerView(recyclerView, name, searchWord);
-            psrv.build(this, progressBar);
-        } else
-            PhotoSearchRecyclerView.photoSearchRecyclerView.reBuild(searchWord);
+        new FindPhotosAsync(progressBar, adapter, searchWord).execute();
     }
 
     @Override
@@ -111,8 +122,17 @@ public class MainActivity extends AppCompatActivity {
 
             startActivity(intent);
         } else if (id == R.id.change_view) {
-            //((ActionMenuItemView)findViewById(id)).setIcon(getResources().getDrawable(R.drawable.change_view));
-            // psrv.reBuild(new LinearLayoutManager(this));
+            ActionMenuItemView menuItemView = findViewById(id);
+
+            if (gridView) {
+                menuItemView.setIcon(getResources().getDrawable(R.drawable.linear_view));
+                recyclerView.setLayoutManager(new LinearLayoutManager(this));
+                gridView = false;
+            } else {
+                menuItemView.setIcon(getResources().getDrawable(R.drawable.grid_view));
+                recyclerView.setLayoutManager(new GridLayoutManager(this, 2));
+                gridView = true;
+            }
         }
 
         return true;
@@ -149,5 +169,24 @@ public class MainActivity extends AppCompatActivity {
 
         NetworkInfo networkInfo = cm.getActiveNetworkInfo();
         return networkInfo != null && networkInfo.isConnected();
+    }
+
+    /**
+     * Touch helper
+     */
+    private class PhotoTouchHelper extends ItemTouchHelper.SimpleCallback {
+        public PhotoTouchHelper(int dragDirs, int swipeDirs) {
+            super(dragDirs, swipeDirs);
+        }
+
+        @Override
+        public boolean onMove(@NonNull RecyclerView recyclerView, @NonNull RecyclerView.ViewHolder viewHolder, @NonNull RecyclerView.ViewHolder target) {
+            return false;
+        }
+
+        @Override
+        public void onSwiped(@NonNull RecyclerView.ViewHolder viewHolder, int direction) {
+            adapter.removeItem((PhotoHolder) viewHolder);
+        }
     }
 }

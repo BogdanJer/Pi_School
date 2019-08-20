@@ -16,7 +16,6 @@ public class DbHelper extends SQLiteOpenHelper {
     public void onCreate(SQLiteDatabase db) {
         db.execSQL("CREATE TABLE users (_id INTEGER PRIMARY KEY AUTOINCREMENT, name TEXT UNIQUE)");
 
-        //db.execSQL("CREATE TABLE tags (_id INTEGER PRIMARY KEY AUTOINCREMENT, title TEXT, user_code INTEGER, FOREIGN KEY(user_code) REFERENCES users(_id));");
         db.execSQL("CREATE TABLE user_favorites(user TEXT, photo TEXT, FOREIGN KEY(user) REFERENCES users(_id), FOREIGN KEY(photo) " +
                 "REFERENCES photos(_id));");
 

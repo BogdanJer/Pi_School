@@ -12,6 +12,11 @@
     <dimen name="small_margin">8dp</dimen>
     <dimen name="tiny_margin">4dp</dimen>
 
+    <!--Padding-->
+    <dimen name="small_padding">4dp</dimen>
+    <dimen name="medium_padding">8dp</dimen>
+    <dimen name="large_padding">12dp</dimen>
+
     <!--Text size-->
     <dimen name="logo_size">36sp</dimen>
     <dimen name="large_text">30sp</dimen>
