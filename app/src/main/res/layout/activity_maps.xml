@@ -1,0 +1,75 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/white"
+    android:orientation="vertical">
+
+    <FrameLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <Button
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_gravity="bottom"
+            android:gravity="center"
+            android:onClick="findPhotosByLocation"
+            android:text="Find photos by location"
+            android:textSize="@dimen/medium_text" />
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/small_margin"
+            android:background="@color/white"
+            android:orientation="horizontal">
+
+            <EditText
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="6"
+                android:paddingStart="@dimen/medium_padding"
+                android:paddingEnd="@dimen/medium_padding"
+                android:text="Kiev"
+                android:textSize="@dimen/medium_text" />
+
+            <!-- Not active -->
+            <ImageButton
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:layout_weight="1"
+                android:background="@color/transparent"
+                android:clickable="false"
+                android:src="@drawable/search" />
+
+        </LinearLayout>
+
+        <com.google.android.material.floatingactionbutton.FloatingActionButton
+            android:id="@+id/find_me_fab"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="bottom|end"
+            android:layout_marginEnd="@dimen/floating_button_margin_end"
+            android:layout_marginBottom="@dimen/floating_button_margin_bottom"
+            android:background="@drawable/fab"
+            android:backgroundTint="@color/white"
+            android:onClick="findMeLocation"
+            android:src="@drawable/my_location"
+            app:borderWidth="0dp"
+            app:elevation="2dp" />
+
+        <fragment
+            android:id="@+id/map_view"
+            class="com.google.android.gms.maps.SupportMapFragment"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            tools:context=".MapsActivity" />
+    </FrameLayout>
+
+    <include layout="@layout/toolbar" />
+
+</LinearLayout>

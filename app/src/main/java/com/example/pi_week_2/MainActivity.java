@@ -30,6 +30,7 @@ import com.example.pi_week_2.async.FindPhotosAsync;
 import com.example.pi_week_2.db.flickr.FlickrDAO;
 import com.example.pi_week_2.holder.PhotoHolder;
 import com.facebook.stetho.Stetho;
+import com.google.android.material.bottomnavigation.BottomNavigationView;
 
 public class MainActivity extends AppCompatActivity {
     public static final String SEARCH_TAG = "Search word";
@@ -42,6 +43,8 @@ public class MainActivity extends AppCompatActivity {
     private ProgressBar progressBar;
     private LinearLayout searchLayout;
     private RecyclerView recyclerView;
+
+    private BottomNavigationView navigationView;
 
     public static String name;
     private PhotoAdapter adapter;
@@ -72,6 +75,22 @@ public class MainActivity extends AppCompatActivity {
 
         searchText.setText(preferences.getString(SEARCH_TAG, ""));
 
+        navigationView = findViewById(R.id.bottom_navigation);
+        navigationView.setOnNavigationItemSelectedListener(menuItem -> {
+            Intent intent = null;
+            switch (menuItem.getItemId()) {
+                case R.id.favorite_bottom_nav:
+                    System.out.println(name);
+                    intent = new Intent(getBaseContext(), ShowFavoriteActivity.class);
+                    break;
+                case R.id.map_bottom_nav:
+                    intent = new Intent(getBaseContext(), MapsActivity.class);
+                    break;
+            }
+            startActivity(intent);
+            return true;
+        });
+
         recyclerView = findViewById(R.id.photos_recycler_view);
         adapter = new PhotoAdapter(this);
         manager = new GridLayoutManager(this, 2);
@@ -97,7 +116,7 @@ public class MainActivity extends AppCompatActivity {
         adapter.setTag(searchWord);
 
         FlickrDAO.getDao(this).insertHistoryNote(name, searchWord);
-        new FindPhotosAsync(progressBar, adapter, searchWord).execute();
+        fpa = (FindPhotosAsync) new FindPhotosAsync(progressBar, adapter, searchWord).execute();
     }
 
     @Override
@@ -111,15 +130,9 @@ public class MainActivity extends AppCompatActivity {
         int id = item.getItemId();
 
         Intent intent;
-        if (id == R.id.action_settings) {
-            intent = new Intent(this, ShowFavoriteActivity.class);
-            intent.putExtra(USER_TAG, name);
-
-            startActivity(intent);
-        } else if (id == R.id.history) {
+        if (id == R.id.history) {
             intent = new Intent(this, HistoryActivity.class);
             intent.putExtra(USER_TAG, name);
-
             startActivity(intent);
         } else if (id == R.id.change_view) {
             ActionMenuItemView menuItemView = findViewById(id);
@@ -145,6 +158,13 @@ public class MainActivity extends AppCompatActivity {
             fpa.cancel(true);
 
         getPreferences(Context.MODE_PRIVATE).edit().putString(SEARCH_TAG, searchText.getText().toString()).apply();
+    }
+
+    @Override
+    protected void onStart() {
+        super.onStart();
+
+        navigationView.getMenu().findItem(R.id.search_bottom_nav).setChecked(true);
     }
 
     @Override

@@ -25,6 +25,8 @@ public class FlickrManager {
     private static final String NO_JSON_CALLBACK_QUERY = "nojsoncallback";
     private static final String FORMAT_QUERY = "format";
     private static final String TAGS_QUERY = "tags";
+    private static final String LATITUDE = "lat";
+    private static final String LONGITUDE = "lon";
     private static final String SCHEME = "https";
     private static final String FORMAT = "json";
     private static final String DOMAIN = "api.flickr.com";
@@ -35,16 +37,11 @@ public class FlickrManager {
     private int perPage = 4000;
     private int page = 0;
 
-    public static FlickrManager getInstance() {
-        return fm;
-    }
+    private List<String> photoList;
+    private Uri.Builder builder;
 
-    public List<String> searchPhotos(String tags) {
-        URL url;
-        StringBuilder json = new StringBuilder();
-
-        try {
-            Uri.Builder builder = new Uri.Builder();
+    public FlickrManager searchPhotos() {
+        builder = new Uri.Builder();
             builder.scheme(SCHEME)
                     .authority(DOMAIN)
                     .appendPath(PATH_1)
@@ -54,10 +51,35 @@ public class FlickrManager {
                     .appendQueryParameter(PER_PAGE_QUERY, String.valueOf(perPage))
                     .appendQueryParameter(PAGE_QUERY, String.valueOf(page))
                     .appendQueryParameter(NO_JSON_CALLBACK_QUERY, String.valueOf(1))
-                    .appendQueryParameter(FORMAT_QUERY, FORMAT)
-                    .appendQueryParameter(TAGS_QUERY, tags);
+                    .appendQueryParameter(FORMAT_QUERY, FORMAT);
 
-            url = new URL(builder.build().toString());
+        return this;
+    }
+
+    public static FlickrManager getInstance() {
+        return fm;
+    }
+
+    public FlickrManager byTag(String tag) {
+        builder.appendQueryParameter(TAGS_QUERY, tag);
+
+        getJSON(builder.toString());
+        return this;
+    }
+
+    public FlickrManager byLatLon(double latitude, double longitude) {
+        builder.appendQueryParameter(LATITUDE, String.valueOf(latitude))
+                .appendQueryParameter(LONGITUDE, String.valueOf(longitude));
+
+        getJSON(builder.toString());
+        return this;
+    }
+
+    private void getJSON(String uri) {
+        URL url;
+        StringBuilder json = new StringBuilder();
+        try {
+            url = new URL(uri);
 
             HttpURLConnection hul = (HttpURLConnection) url.openConnection();
             hul.setRequestMethod("GET");
@@ -81,10 +103,10 @@ public class FlickrManager {
             e.printStackTrace();
         }
 
-        return makeLinks(getPhotosLinks(json.toString()));
+        getPhotosLinks(json.toString());
     }
 
-    private ArrayList<PhotoFlickr> getPhotosLinks(String json) {
+    private void getPhotosLinks(String json) {
         ArrayList<PhotoFlickr> list = new ArrayList<>();
 
         try {
@@ -100,17 +122,25 @@ public class FlickrManager {
         } catch (JSONException e) {
             e.printStackTrace();
         }
-        return list;
+
+        makeLinks(list);
     }
 
-    private List<String> makeLinks(ArrayList<PhotoFlickr> list) {
-        List<String> linksList = new ArrayList<>();
+    private void makeLinks(ArrayList<PhotoFlickr> list) {
+        photoList = new ArrayList<>();
 
         for (PhotoFlickr pf : list)
-            linksList.add(String.format("https://farm%s.staticflickr.com/%s/%s_%s.png", pf.getFarm(), pf.getServer(), pf.getId(), pf.getSecret()));
-
-        return linksList;
+            photoList.add(String.format("https://farm%s.staticflickr.com/%s/%s_%s.png", pf.getFarm(), pf.getServer(), pf.getId(), pf.getSecret()));
     }
+
+    public List<String> getPhotoList() {
+        return photoList;
+    }
+
+    public enum FlickrSearchWays {
+        TAG, LAT_LON
+    }
+
     public void setPerPage(int perPage) {
         this.perPage = perPage;
     }

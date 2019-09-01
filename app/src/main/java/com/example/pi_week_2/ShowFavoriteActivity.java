@@ -16,8 +16,6 @@ import com.example.pi_week_2.holder.FavoriteHolder;
 
 import java.util.List;
 
-import static com.example.pi_week_2.MainActivity.USER_TAG;
-
 public class ShowFavoriteActivity extends AppCompatActivity {
     private String name;
     private FavoriteAdapter adapter;
@@ -31,12 +29,10 @@ public class ShowFavoriteActivity extends AppCompatActivity {
         Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
-        name = getIntent().getStringExtra(USER_TAG);
-
-        getSupportActionBar().setTitle(toolbar.getTitle() + "/" + name);
+        getSupportActionBar().setTitle(toolbar.getTitle() + "/" + MainActivity.name);
 
         FlickrDAO dao = FlickrDAO.getDao(this);
-        List<Photo> list = dao.getUserFavorite(name);
+        List<Photo> list = dao.getUserFavorite(MainActivity.name);
 
         RecyclerView recyclerView = findViewById(R.id.show_favorites_recycler_view);
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
