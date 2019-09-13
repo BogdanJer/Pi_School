@@ -1,4 +1,4 @@
-package com.example.pi_week_2;
+package com.example.pi_week_2.model;
 
 import android.content.Intent;
 import android.os.Bundle;
@@ -10,9 +10,10 @@ import android.widget.Toast;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 
+import com.example.pi_week_2.R;
 import com.example.pi_week_2.db.flickr.FlickrDAO;
 
-import static com.example.pi_week_2.MainActivity.USER_TAG;
+import static com.example.pi_week_2.model.MainActivity.USER_TAG;
 
 public class LoginActivity extends AppCompatActivity {
     @Override

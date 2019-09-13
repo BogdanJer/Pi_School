@@ -1,4 +1,4 @@
-package com.example.pi_week_2;
+package com.example.pi_week_2.model;
 
 import android.content.Intent;
 import android.os.Bundle;
@@ -6,7 +6,6 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.ProgressBar;
 
-import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.view.menu.ActionMenuItemView;
@@ -16,11 +15,12 @@ import androidx.recyclerview.widget.ItemTouchHelper;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.example.pi_week_2.R;
+import com.example.pi_week_2.RecyclerItemTouchHelper;
 import com.example.pi_week_2.adapter.MapPhotosAdapter;
 import com.example.pi_week_2.async.FindPhotosAsync;
-import com.example.pi_week_2.holder.MapPhotosHolder;
 
-import static com.example.pi_week_2.MainActivity.USER_TAG;
+import static com.example.pi_week_2.model.MainActivity.USER_TAG;
 
 public class MapPhotosActivity extends AppCompatActivity {
     private MapPhotosAdapter adapter;
@@ -46,8 +46,7 @@ public class MapPhotosActivity extends AppCompatActivity {
         adapter = new MapPhotosAdapter(this);
         recyclerView.setAdapter(adapter);
 
-        ItemTouchHelper.Callback callback = new MapPhotosTouchHelper(0, ItemTouchHelper.RIGHT);
-        ItemTouchHelper touchHelper = new ItemTouchHelper(callback);
+        ItemTouchHelper touchHelper = new ItemTouchHelper(new RecyclerItemTouchHelper(0, ItemTouchHelper.RIGHT, adapter));
         touchHelper.attachToRecyclerView(recyclerView);
 
         new FindPhotosAsync(pb, adapter, latitude, longitude).execute();
@@ -86,21 +85,5 @@ public class MapPhotosActivity extends AppCompatActivity {
         }
 
         return true;
-    }
-
-    private class MapPhotosTouchHelper extends ItemTouchHelper.SimpleCallback {
-        public MapPhotosTouchHelper(int dragDirs, int swipeDirs) {
-            super(dragDirs, swipeDirs);
-        }
-
-        @Override
-        public boolean onMove(@NonNull RecyclerView recyclerView, @NonNull RecyclerView.ViewHolder viewHolder, @NonNull RecyclerView.ViewHolder target) {
-            return false;
-        }
-
-        @Override
-        public void onSwiped(@NonNull RecyclerView.ViewHolder viewHolder, int direction) {
-            adapter.removeItem((MapPhotosHolder) viewHolder);
-        }
     }
 }

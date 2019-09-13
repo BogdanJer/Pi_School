@@ -1,4 +1,4 @@
-package com.example.pi_week_2;
+package com.example.pi_week_2.model;
 
 import android.Manifest;
 import android.app.Activity;
@@ -6,6 +6,7 @@ import android.content.Intent;
 import android.content.IntentSender;
 import android.content.pm.PackageManager;
 import android.location.Location;
+import android.os.Build;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.Menu;
@@ -20,6 +21,7 @@ import androidx.appcompat.widget.Toolbar;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
 
+import com.example.pi_week_2.R;
 import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.android.gms.common.api.PendingResult;
 import com.google.android.gms.common.api.Status;
@@ -40,7 +42,6 @@ import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
-import static com.example.pi_week_2.MainActivity.USER_TAG;
 
 public class MapsActivity extends AppCompatActivity implements OnMapReadyCallback {
     public static final int LOCATION_REQUEST_CODE = 1;
@@ -75,24 +76,24 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
 
         fab = findViewById(R.id.find_me_fab);
 
-        //  if(Build.VERSION.SDK_INT > Build.VERSION_CODES.LOLLIPOP_MR1) {
-        if (ContextCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
-            if (ActivityCompat.shouldShowRequestPermissionRationale(this, Manifest.permission.ACCESS_FINE_LOCATION)) {
-                Toast.makeText(this, "Location permission is necessary for find your location or any other place to search photos by location tag",
-                        Toast.LENGTH_LONG).show();
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+            if (ContextCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+                if (ActivityCompat.shouldShowRequestPermissionRationale(this, Manifest.permission.ACCESS_FINE_LOCATION)) {
+                    Toast.makeText(this, "Location permission is necessary for find your location or any other place to search photos by location tag",
+                            Toast.LENGTH_LONG).show();
+                } else {
+                    ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.ACCESS_FINE_LOCATION}, LOCATION_REQUEST_CODE);
+                }
             } else {
-                ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.ACCESS_FINE_LOCATION}, LOCATION_REQUEST_CODE);
+                SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager().findFragmentById(R.id.map_view);
+                mapFragment.getMapAsync(this);
+                Log.d(LOCATION_TAG, "granted");
             }
         } else {
             SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager().findFragmentById(R.id.map_view);
             mapFragment.getMapAsync(this);
-            Log.d(LOCATION_TAG, "granted");
-        }
-       /* }else{
-            SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager().findFragmentById(R.id.map_view);
-            mapFragment.getMapAsync(this);
             Log.d(LOCATION_TAG,"granted");
-        }*/
+        }
 
         googleApiClient = new GoogleApiClient.Builder(this)
                 .addApi(LocationServices.API)
@@ -129,7 +130,7 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
         Intent intent;
         if (id == R.id.history) {
             intent = new Intent(this, HistoryActivity.class);
-            intent.putExtra(USER_TAG, MainActivity.name);
+            intent.putExtra(MainActivity.USER_TAG, MainActivity.name);
             startActivity(intent);
         } else if (id == R.id.main_screen) {
             finish();

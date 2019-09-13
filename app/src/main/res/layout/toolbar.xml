@@ -5,7 +5,7 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar"
-    tools:context=".ShowFavoriteActivity">
+    tools:context=".model.ShowFavoriteActivity">
 
     <androidx.appcompat.widget.Toolbar
         android:id="@+id/toolbar"

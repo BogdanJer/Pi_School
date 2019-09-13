@@ -11,13 +11,14 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.example.pi_week_2.R;
+import com.example.pi_week_2.RemovableAdapter;
 import com.example.pi_week_2.holder.MapPhotosHolder;
 import com.google.android.material.snackbar.Snackbar;
 
 import java.util.List;
 import java.util.Locale;
 
-public class MapPhotosAdapter extends RecyclerView.Adapter<MapPhotosHolder> {
+public class MapPhotosAdapter extends RecyclerView.Adapter<MapPhotosHolder> implements RemovableAdapter {
     private List<String> links;
     private double lat;
     private double lon;
@@ -64,7 +65,8 @@ public class MapPhotosAdapter extends RecyclerView.Adapter<MapPhotosHolder> {
         return size;
     }
 
-    public void removeItem(MapPhotosHolder holder) {
+    @Override
+    public void removeItem(RecyclerView.ViewHolder holder) {
         if (RecyclerView.NO_POSITION == holder.getAdapterPosition())
             return;
 
@@ -76,7 +78,7 @@ public class MapPhotosAdapter extends RecyclerView.Adapter<MapPhotosHolder> {
         Snackbar.make(holder.itemView, "Photo was deleted!",
                 Snackbar.LENGTH_LONG).setAction(R.string.cancel_deleting, (v) -> {
             notifyItemInserted(position);
-            links.add(position, holder.getLink());
+            links.add(position, ((MapPhotosHolder) holder).getLink());
         }).show();
     }
 }

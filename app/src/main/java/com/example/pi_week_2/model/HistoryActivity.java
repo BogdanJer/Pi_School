@@ -1,4 +1,4 @@
-package com.example.pi_week_2;
+package com.example.pi_week_2.model;
 
 import android.os.Bundle;
 
@@ -8,12 +8,13 @@ import androidx.appcompat.widget.Toolbar;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.example.pi_week_2.R;
 import com.example.pi_week_2.adapter.SimpleStringAdapter;
 import com.example.pi_week_2.db.flickr.FlickrDAO;
 
 import java.util.List;
 
-import static com.example.pi_week_2.MainActivity.USER_TAG;
+import static com.example.pi_week_2.model.MainActivity.USER_TAG;
 
 public class HistoryActivity extends AppCompatActivity {
     @Override

@@ -4,7 +4,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
-    tools:context=".LookPhotoActivity">
+    tools:context=".model.LookPhotoActivity">
 
     <RelativeLayout
         android:layout_width="match_parent"
@@ -25,9 +25,18 @@
             android:id="@+id/favorite_but"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_alignParentRight="true"
+            android:layout_toLeftOf="@id/download_photo"
             android:onClick="addToFavorite"
             android:src="@drawable/star_empty" />
+
+        <ImageButton
+            android:id="@+id/download_photo"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentRight="true"
+            android:onClick="savePhoto"
+            android:src="@drawable/download" />
+
     </RelativeLayout>
 
     <WebView

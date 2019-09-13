@@ -17,5 +17,10 @@
             android:icon="@drawable/star_full"
             android:title="Favorite"
             app:showAsAction="ifRoom" />
+        <item
+            android:id="@+id/gallery_nav"
+            android:icon="@drawable/gallery_light"
+            android:title="Gallery"
+            app:showAsAction="ifRoom" />
     </group>
 </menu>

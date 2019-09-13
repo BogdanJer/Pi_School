@@ -21,6 +21,9 @@ public class DbHelper extends SQLiteOpenHelper {
 
         db.execSQL("CREATE TABLE photos (_id INTEGER PRIMARY KEY AUTOINCREMENT, link TEXT, tag TEXT);");
         db.execSQL("CREATE TABLE history (_id INTEGER PRIMARY KEY AUTOINCREMENT, text TEXT, user_id INTEGER, FOREIGN KEY(user_id) REFERENCES users(_id))");
+        db.execSQL("CREATE TABLE s_photos(_id INTEGER PRIMARY KEY AUTOINCREMENT, uuid TEXT, link TEXT, folder_type INTEGER)");
+        db.execSQL("CREATE TABLE saved_photos(_id INTEGER PRIMARY KEY AUTOINCREMENT, user_id INTEGER, photo INTEGER, FOREIGN KEY(user_id) REFERENCES users(_id)," +
+                " FOREIGN KEY(photo) REFERENCES s_photos(_id))");
     }
 
     @Override

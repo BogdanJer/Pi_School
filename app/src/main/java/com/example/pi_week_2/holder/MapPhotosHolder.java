@@ -9,13 +9,13 @@ import android.widget.TextView;
 
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.example.pi_week_2.LookPhotoActivity;
 import com.example.pi_week_2.R;
+import com.example.pi_week_2.model.LookPhotoActivity;
 
-import static com.example.pi_week_2.MainActivity.SEARCH_TAG;
-import static com.example.pi_week_2.MainActivity.URL_TAG;
-import static com.example.pi_week_2.MainActivity.USER_TAG;
-import static com.example.pi_week_2.MainActivity.name;
+import static com.example.pi_week_2.model.MainActivity.SEARCH_TAG;
+import static com.example.pi_week_2.model.MainActivity.URL_TAG;
+import static com.example.pi_week_2.model.MainActivity.USER_TAG;
+import static com.example.pi_week_2.model.MainActivity.name;
 
 public class MapPhotosHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
     private Context context;

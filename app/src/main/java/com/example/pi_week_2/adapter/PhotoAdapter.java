@@ -11,12 +11,13 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.example.pi_week_2.R;
+import com.example.pi_week_2.RemovableAdapter;
 import com.example.pi_week_2.holder.PhotoHolder;
 import com.google.android.material.snackbar.Snackbar;
 
 import java.util.List;
 
-public class PhotoAdapter extends RecyclerView.Adapter<PhotoHolder> {
+public class PhotoAdapter extends RecyclerView.Adapter<PhotoHolder> implements RemovableAdapter {
     private List<String> links;
 
     private Context context;
@@ -59,11 +60,14 @@ public class PhotoAdapter extends RecyclerView.Adapter<PhotoHolder> {
         notifyItemRangeInserted(0, size);
     }
 
-    public void removeItem(PhotoHolder photoHolder) {
-        int position = photoHolder.getAdapterPosition();
+    @Override
+    public void removeItem(RecyclerView.ViewHolder holder) {
+        int position = holder.getAdapterPosition();
 
         links.remove(position);
         notifyItemRemoved(position);
+
+        PhotoHolder photoHolder = (PhotoHolder) holder;
 
         Snackbar.make(photoHolder.itemView, String.format("%s " + context.getString(R.string.photo_is_deleted), photoHolder.getTag()),
                 Snackbar.LENGTH_LONG).setAction(R.string.cancel_deleting, (v) -> {

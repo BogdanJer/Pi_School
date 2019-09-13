@@ -15,6 +15,9 @@ public class FlickrDAO {
     private static final String PHOTO_TABLE = "photos";
     private static final String USER_FAVORITES_TABLE = "user_favorites";
     private static final String HISTORY_TABLE = "history";
+    private static final String SAVED_PHOTOS = "s_photos";
+    private static final String SAVED_PHOTOS_OONNECTION = "saved_photos";
+
     private static DbHelper dbHelper;
     private static FlickrDAO dao;
 
@@ -179,5 +182,90 @@ public class FlickrDAO {
         cursor.moveToFirst();
         if (cursor.getInt(0) == 0)
             dbHelper.getWritableDatabase().delete(PHOTO_TABLE, "link=?", new String[]{link});
+    }
+
+    // Save new photo to internal|external storage
+    public void savePhoto(String user, String url, String uuid, int folderType) {
+        int userId = getUserId(user);
+
+        ContentValues values = new ContentValues();
+
+        if (!isPhotoSaved(url)) {
+            values.put("uuid", uuid);
+            values.put("link", url);
+            values.put("folder_type", folderType);
+            dbHelper.getWritableDatabase().insert(SAVED_PHOTOS, null, values);
+        }
+
+        values.clear();
+        if (getSavedPhoto(user, url) == -1) {
+            values.put("user_id", userId);
+            values.put("photo", getSavedPhotoId(url));
+
+            dbHelper.getWritableDatabase().insert(SAVED_PHOTOS_OONNECTION, null, values);
+        }
+
+    }
+
+    public int getSavedPhotoId(String url) {
+        Cursor cursor = dbHelper.getReadableDatabase().query(SAVED_PHOTOS, new String[]{"_id"}, "link=?", new String[]{url}, null, null, null);
+
+        cursor.moveToFirst();
+
+        if (cursor.getCount() != 0)
+            return cursor.getInt(0);
+
+        return -1;
+    }
+
+    public int getSavedPhoto(String user, String url) {
+        int userId = getUserId(user);
+        int photoId = getSavedPhotoId(url);
+
+        Cursor cursor = dbHelper.getReadableDatabase().query(SAVED_PHOTOS_OONNECTION, new String[]{"_id"}, "user_id=? AND photo=?",
+                new String[]{String.valueOf(userId), String.valueOf(photoId)}, null, null, null);
+
+        cursor.moveToFirst();
+
+        if (cursor.getCount() != 0)
+            return cursor.getInt(0);
+
+        return -1;
+    }
+
+    public boolean isPhotoSaved(String url) {
+        Cursor cursor = dbHelper.getReadableDatabase().query(SAVED_PHOTOS, new String[]{"_id"}, "link=?", new String[]{url}, null, null, null);
+
+        if (cursor.getCount() != 0)
+            return true;
+        return false;
+    }
+
+    public void deleteSavedPhoto(String user, String url) {
+        int userId = getUserId(user);
+        int photoId = getSavedPhotoId(url);
+
+        dbHelper.getWritableDatabase().delete(SAVED_PHOTOS_OONNECTION, "user_id=? AND photo=?", new String[]{String.valueOf(userId), String.valueOf(photoId)});
+
+        Cursor cursor = dbHelper.getReadableDatabase().rawQuery("SELECT photo FROM " + SAVED_PHOTOS_OONNECTION + " INNER JOIN " + SAVED_PHOTOS + " ON " + SAVED_PHOTOS_OONNECTION +
+                ".photo = " + SAVED_PHOTOS + "._id WHERE " + SAVED_PHOTOS + ".link = '" + url + "'", null);
+
+        if (cursor.getCount() == 0)
+            dbHelper.getWritableDatabase().delete(SAVED_PHOTOS, "link=?", new String[]{url});
+    }
+
+    public List<String> getUsersSavedPhotos(String user, int folderType) {
+        List<String> list = new ArrayList<>();
+
+        int userId = getUserId(user);
+
+        Cursor cursor = dbHelper.getReadableDatabase().rawQuery("SELECT " + SAVED_PHOTOS + ".uuid FROM " + SAVED_PHOTOS_OONNECTION + " INNER JOIN " + SAVED_PHOTOS
+                + " ON " + SAVED_PHOTOS + "._id = " + SAVED_PHOTOS_OONNECTION + ".photo WHERE " + SAVED_PHOTOS_OONNECTION + ".user_id = '" + userId + "' AND "
+                + SAVED_PHOTOS + ".folder_type = '" + folderType + "'", null);
+
+        while (cursor.moveToNext()) {
+            list.add(cursor.getString(0));
+        }
+        return list;
     }
 }

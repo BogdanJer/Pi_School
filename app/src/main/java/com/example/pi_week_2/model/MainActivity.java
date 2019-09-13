@@ -1,11 +1,15 @@
-package com.example.pi_week_2;
+package com.example.pi_week_2.model;
 
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.content.pm.PackageManager;
+import android.graphics.Bitmap;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
+import android.net.Uri;
 import android.os.Bundle;
+import android.provider.MediaStore;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -17,6 +21,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.view.menu.ActionMenuItemView;
 import androidx.appcompat.widget.Toolbar;
@@ -25,18 +30,25 @@ import androidx.recyclerview.widget.ItemTouchHelper;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.example.pi_week_2.R;
+import com.example.pi_week_2.RecyclerItemTouchHelper;
 import com.example.pi_week_2.adapter.PhotoAdapter;
 import com.example.pi_week_2.async.FindPhotosAsync;
 import com.example.pi_week_2.db.flickr.FlickrDAO;
-import com.example.pi_week_2.holder.PhotoHolder;
+import com.example.pi_week_2.storage.InternalStorage;
 import com.facebook.stetho.Stetho;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
+import com.yalantis.ucrop.UCrop;
+
+import java.io.File;
 
 public class MainActivity extends AppCompatActivity {
     public static final String SEARCH_TAG = "Search word";
     public static final String RUNNING_TAG = "Downloading";
     public static final String USER_TAG = "User";
     public static final String URL_TAG = "Url";
+
+    private static final int REQUEST_IMAGE_CAPTURE = 1;
 
     private EditText searchText;
     private TextView photoLinks;
@@ -45,6 +57,8 @@ public class MainActivity extends AppCompatActivity {
     private RecyclerView recyclerView;
 
     private BottomNavigationView navigationView;
+
+    private InternalStorage storage;
 
     public static String name;
     private PhotoAdapter adapter;
@@ -59,7 +73,6 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
 
         searchText = findViewById(R.id.search_text);
-        //photoLinks = findViewById(R.id.photo_links);
         progressBar = findViewById(R.id.progress_bar);
 
         searchLayout = findViewById(R.id.search_layout);
@@ -75,19 +88,24 @@ public class MainActivity extends AppCompatActivity {
 
         searchText.setText(preferences.getString(SEARCH_TAG, ""));
 
+        storage = new InternalStorage(this);
+
         navigationView = findViewById(R.id.bottom_navigation);
         navigationView.setOnNavigationItemSelectedListener(menuItem -> {
             Intent intent = null;
             switch (menuItem.getItemId()) {
                 case R.id.favorite_bottom_nav:
-                    System.out.println(name);
                     intent = new Intent(getBaseContext(), ShowFavoriteActivity.class);
                     break;
                 case R.id.map_bottom_nav:
                     intent = new Intent(getBaseContext(), MapsActivity.class);
                     break;
+                case R.id.gallery_nav:
+                    intent = new Intent(getBaseContext(), GalleryActivity.class);
             }
-            startActivity(intent);
+
+            if (intent != null)
+                startActivity(intent);
             return true;
         });
 
@@ -98,8 +116,7 @@ public class MainActivity extends AppCompatActivity {
         recyclerView.setLayoutManager(manager);
         recyclerView.setAdapter(adapter);
 
-        ItemTouchHelper.Callback callback = new PhotoTouchHelper(0, ItemTouchHelper.LEFT | ItemTouchHelper.RIGHT);
-        ItemTouchHelper itemTouchHelper = new ItemTouchHelper(callback);
+        ItemTouchHelper itemTouchHelper = new ItemTouchHelper(new RecyclerItemTouchHelper(0, ItemTouchHelper.LEFT | ItemTouchHelper.RIGHT, adapter));
         itemTouchHelper.attachToRecyclerView(recyclerView);
     }
 
@@ -130,22 +147,25 @@ public class MainActivity extends AppCompatActivity {
         int id = item.getItemId();
 
         Intent intent;
-        if (id == R.id.history) {
-            intent = new Intent(this, HistoryActivity.class);
-            intent.putExtra(USER_TAG, name);
-            startActivity(intent);
-        } else if (id == R.id.change_view) {
-            ActionMenuItemView menuItemView = findViewById(id);
 
-            if (gridView) {
-                menuItemView.setIcon(getResources().getDrawable(R.drawable.linear_view));
-                recyclerView.setLayoutManager(new LinearLayoutManager(this));
-                gridView = false;
-            } else {
-                menuItemView.setIcon(getResources().getDrawable(R.drawable.grid_view));
-                recyclerView.setLayoutManager(new GridLayoutManager(this, 2));
-                gridView = true;
-            }
+        switch (id) {
+            case R.id.history:
+                intent = new Intent(this, HistoryActivity.class);
+                intent.putExtra(USER_TAG, name);
+                startActivity(intent);
+                break;
+            case R.id.change_view:
+                ActionMenuItemView menuItemView = findViewById(id);
+
+                if (gridView) {
+                    menuItemView.setIcon(getResources().getDrawable(R.drawable.linear_view_light));
+                    recyclerView.setLayoutManager(new LinearLayoutManager(this));
+                    gridView = false;
+                } else {
+                    menuItemView.setIcon(getResources().getDrawable(R.drawable.grid_view_light));
+                    recyclerView.setLayoutManager(new GridLayoutManager(this, 2));
+                    gridView = true;
+                }
         }
 
         return true;
@@ -159,11 +179,9 @@ public class MainActivity extends AppCompatActivity {
 
         getPreferences(Context.MODE_PRIVATE).edit().putString(SEARCH_TAG, searchText.getText().toString()).apply();
     }
-
     @Override
     protected void onStart() {
         super.onStart();
-
         navigationView.getMenu().findItem(R.id.search_bottom_nav).setChecked(true);
     }
 
@@ -191,22 +209,60 @@ public class MainActivity extends AppCompatActivity {
         return networkInfo != null && networkInfo.isConnected();
     }
 
-    /**
-     * Touch helper
-     */
-    private class PhotoTouchHelper extends ItemTouchHelper.SimpleCallback {
-        public PhotoTouchHelper(int dragDirs, int swipeDirs) {
-            super(dragDirs, swipeDirs);
+    public void takePicture(View view) {
+        if (!getPackageManager().hasSystemFeature(PackageManager.FEATURE_CAMERA)) {
+            Toast.makeText(this, "Doesn't available on this device!", Toast.LENGTH_LONG).show();
+            return;
         }
 
-        @Override
-        public boolean onMove(@NonNull RecyclerView recyclerView, @NonNull RecyclerView.ViewHolder viewHolder, @NonNull RecyclerView.ViewHolder target) {
-            return false;
+        Intent takePictureIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
+        if (takePictureIntent.resolveActivity(getPackageManager()) != null) {
+            startActivityForResult(takePictureIntent, REQUEST_IMAGE_CAPTURE);
         }
+    }
 
-        @Override
-        public void onSwiped(@NonNull RecyclerView.ViewHolder viewHolder, int direction) {
-            adapter.removeItem((PhotoHolder) viewHolder);
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+
+        if (requestCode == REQUEST_IMAGE_CAPTURE && resultCode == RESULT_OK) {
+
+            Bitmap photo = (Bitmap) data.getExtras().get("data");
+
+            String fileName = storage.savePhoto(photo, "");
+
+            startUcrop(Uri.fromFile(new File(fileName)));
+
+        } else if (requestCode == UCrop.REQUEST_CROP && resultCode == RESULT_OK) {
+            Uri imageUri = UCrop.getOutput(data);
+
+            if (imageUri != null)
+                Toast.makeText(this, "Photo is saved", Toast.LENGTH_LONG).show();
         }
+    }
+
+    private void startUcrop(Uri uri) {
+        UCrop uCrop = UCrop.of(uri, uri);
+
+        uCrop.withAspectRatio(16, 9);
+
+        uCrop.withMaxResultSize(1920, 1080);
+        uCrop.withOptions(getUcropOptions());
+
+        uCrop.start(MainActivity.this);
+    }
+
+    private UCrop.Options getUcropOptions() {
+        UCrop.Options options = new UCrop.Options();
+
+        options.setCompressionQuality(0);
+
+        options.setCompressionFormat(Bitmap.CompressFormat.PNG);
+        //options.setCompressionFormat(Bitmap.CompressFormat.JPEG);
+
+        options.setHideBottomControls(false);
+        options.setFreeStyleCropEnabled(true);
+
+        return options;
     }
 }

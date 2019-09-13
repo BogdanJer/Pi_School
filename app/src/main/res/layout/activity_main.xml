@@ -6,7 +6,7 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:background="@color/white"
     android:orientation="vertical"
-    tools:context=".MainActivity">
+    tools:context=".model.MainActivity">
 
     <include layout="@layout/toolbar" />
 
@@ -58,6 +58,18 @@
             android:layout_height="wrap_content"
             android:layout_gravity="center"
             android:visibility="invisible" />
+
+
+        <com.google.android.material.floatingactionbutton.FloatingActionButton
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="bottom|end"
+            android:layout_marginEnd="@dimen/floating_button_margin_end"
+            android:layout_marginBottom="@dimen/floating_button_margin_bottom_with_bottom_menu"
+            android:backgroundTint="@color/pink"
+            android:onClick="takePicture"
+            android:src="@drawable/camera_light"
+            app:borderWidth="0dp" />
 
         <com.google.android.material.bottomnavigation.BottomNavigationView
             android:id="@+id/bottom_navigation"

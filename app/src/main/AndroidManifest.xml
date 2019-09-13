@@ -2,11 +2,6 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="com.example.pi_week_2">
 
-    <!--
-         The ACCESS_COARSE/FINE_LOCATION permissions are not required to use
-         Google Maps Android API v2, but you must specify either coarse or fine
-         location permissions for the 'MyLocation' functionality.
-    -->
     <application
         android:allowBackup="true"
         android:icon="@mipmap/ic_launcher"
@@ -15,13 +10,13 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme.Launcher">
 
-        <activity android:name=".MainActivity" />
+        <activity android:name=".model.MainActivity" />
 
         <activity
-            android:name=".LookPhotoActivity"
+            android:name=".model.LookPhotoActivity"
             android:theme="@style/Theme.AppCompat.DayNight.NoActionBar" />
 
-        <activity android:name=".LoginActivity">
+        <activity android:name=".model.LoginActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
@@ -29,15 +24,19 @@
             </intent-filter>
         </activity>
         <activity
-            android:name=".ShowFavoriteActivity"
+            android:name=".model.ShowFavoriteActivity"
             android:label="Favorite" />
         <activity
-            android:name=".HistoryActivity"
+            android:name=".model.HistoryActivity"
             android:label="History" />
         <activity
-            android:name=".MapsActivity"
+            android:name=".model.MapsActivity"
             android:label="Map" />
-        <activity android:name=".MapPhotosActivity" />
+        <activity android:name=".model.MapPhotosActivity" />
+        <activity android:name=".model.GalleryActivity" />
+        <activity
+            android:name="com.yalantis.ucrop.UCropActivity"
+            android:screenOrientation="portrait" />
 
         <meta-data
             android:name="com.google.android.geo.API_KEY"
@@ -52,7 +51,9 @@
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
     <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
     <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
-
     <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
 
+    <uses-feature
+        android:name="android.hardware.camera"
+        android:required="false" />
 </manifest>

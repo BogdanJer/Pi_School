@@ -1,5 +1,6 @@
 <resources>
-    <string name="app_name">PI_week_2</string>
+    <string name="app_name">MiniFlickr</string>
+
     <string name="google_maps_key" templateMergeStrategy="preserve" translatable="false">AIzaSyD40O1j4NClAzxxwCrZFAAPEIHJSwIaE7g</string>
 
     <string name="search_edit">Search photos</string>
@@ -19,9 +20,12 @@
 
     <string name="photo_is_added">Photo is added!</string>
     <string name="photo_is_deleted">is deleted!</string>
+    <string name="delete_from_favorite">Photo is deleted</string>
 
     <string name="cancel_deleting">UNDO</string>
     <string name="title_activity_maps">Map</string>
 
     <string name="lat_lon_map_search">Lat=%f | Lon=%f</string>
+
+    <string name="no_photo_warning">No photos saved yet\nTake or save a photo</string>
 </resources>
