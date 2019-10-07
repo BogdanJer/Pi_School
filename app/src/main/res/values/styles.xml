@@ -1,0 +1,24 @@
+<resources>
+
+    <!-- Base application theme. -->
+    <style name="AppTheme" parent="Theme.AppCompat.Light.NoActionBar">
+        <!-- Customize your theme here. -->
+        <item name="colorPrimary">@color/colorPrimary</item>
+        <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
+        <item name="colorAccent">@color/colorAccent</item>
+    </style>
+
+    <style name="TitleText" parent="Widget.AppCompat.TextView">
+        <item name="android:textColor">@color/black</item>
+        <item name="android:textSize">@dimen/small_text</item>
+        <item name="android:gravity">center</item>
+        <item name="android:paddingTop">@dimen/padding_top</item>
+    </style>
+
+    <style name="SimpleTextWithPadding" parent="Widget.AppCompat.TextView">
+        <item name="android:textColor">@color/black</item>
+        <item name="android:paddingStart">@dimen/padding_medium</item>
+        <item name="android:paddingTop">@dimen/padding_top</item>
+    </style>
+
+</resources>

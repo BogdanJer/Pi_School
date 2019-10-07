@@ -1,0 +1,13 @@
+<resources>
+    <string name="app_name">BeerMir</string>
+
+    <string name="title_search">Search</string>
+    <string name="title_pubs">Pubs</string>
+    <string name="title_favorites">Favorites</string>
+
+    <string name="sandbox_url">https://sandbox-api.brewerydb.com/v2/</string>
+    <string name="sandbox_key">5856caf6db4f6a267b148711c7142c1b</string>
+
+    <string name="permission_granted">Permission granted</string>
+    <string name="permission_denied">Permission denied</string>
+</resources>

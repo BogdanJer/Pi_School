@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="horizontal"
+    android:layout_width="match_parent"
+    android:layout_height="150dp"
+    android:padding="6dp"
+    android:background="@drawable/border"
+    android:id="@+id/beer_layout"
+    android:layout_margin="@dimen/margin_small">
+
+    <ImageView
+        android:id="@+id/beer_image"
+        android:layout_width="0dp"
+        android:layout_height="match_parent"
+        android:src="@drawable/photo_dark"
+        android:layout_weight="1"/>
+
+    <TextView
+        android:id="@+id/beer_name"
+        android:layout_width="0dp"
+        android:layout_height="match_parent"
+        android:text="Name"
+        android:layout_weight="2"
+        style="@style/TitleText"/>
+</LinearLayout>

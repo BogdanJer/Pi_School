@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <item
+        android:id="@+id/search_beer_nav"
+        android:icon="@drawable/search_beer"
+        android:title="@string/title_search" />
+
+    <item
+        android:id="@+id/location_pubs_nav"
+        android:icon="@drawable/location_pubs"
+        android:title="@string/title_pubs" />
+
+    <item
+        android:id="@+id/favorites_nav"
+        android:icon="@drawable/favorites"
+        android:title="@string/title_favorites" />
+</menu>

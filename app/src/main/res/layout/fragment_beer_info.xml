@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical"
+        android:layout_marginTop="?attr/actionBarSize"
+        android:layout_marginStart="@dimen/margin_large"
+        android:layout_marginEnd="@dimen/margin_small"
+        android:paddingTop="@dimen/padding_medium">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal">
+
+            <ImageView
+                android:id="@+id/beer_image_info"
+                android:layout_width="@dimen/image_medium_width"
+                android:layout_height="@dimen/image_medium_height"
+                android:src="@drawable/photo_dark"/>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:orientation="vertical">
+
+                <TextView
+                    android:id="@+id/beer_category_info"
+                    android:layout_width="match_parent"
+                    android:layout_height="0dp"
+                    android:text="Category"
+                    android:layout_weight="1"
+                    style="@style/SimpleTextWithPadding"/>
+
+                <TextView
+                    android:id="@+id/beer_glass_info"
+                    android:layout_width="match_parent"
+                    android:layout_height="0dp"
+                    android:text="Glass"
+                    android:layout_weight="1"
+                    style="@style/SimpleTextWithPadding"/>
+            </LinearLayout>
+        </LinearLayout>
+
+        <TextView
+            android:id="@+id/beer_description_info"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:text="Description"
+            style="@style/SimpleTextWithPadding"
+            android:scrollbars="vertical"/>
+    </LinearLayout>
+</androidx.constraintlayout.widget.ConstraintLayout>
